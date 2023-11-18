@@ -2,7 +2,9 @@ import express from 'express';
 import * as bodyParser from 'body-parser';
 import cors from 'cors';
 import AuthRouter from './routes/auth.router';
+import ClassRoomRouter from './routes/classroom.router';
 import { config } from 'dotenv';
+import { authorizeRequest } from './middlewares/auth.middleware';
 
 config();   // Load config like secrets etc in process.env to be accessible everywhere
 
@@ -30,6 +32,10 @@ const allRoutes = [
     {
         path: "/auth",
         router: AuthRouter
+    },
+    {
+        path: "/classroom",
+        router: ClassRoomRouter
     }
 ];
 
