@@ -2,6 +2,9 @@ import express from 'express';
 import * as bodyParser from 'body-parser';
 import cors from 'cors';
 import AuthRouter from './routes/auth.router';
+import { config } from 'dotenv';
+
+config();   // Load config like secrets etc in process.env to be accessible everywhere
 
 process.on('uncaughtException', (error) => {
     console.error('[GLOBAL] uncaught exception', error);
