@@ -1,4 +1,4 @@
-export enum USER_TYPE {
+export enum ROLES {
     TUTOR = "tutor",
     STUDENT = "student"
 }

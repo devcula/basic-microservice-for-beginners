@@ -2,7 +2,7 @@ import { Response, NextFunction } from 'express';
 import { CustomRequest } from '../interfaces/auth.interface';
 import jwt from 'jsonwebtoken';
 import config from '../../config';
-import { USER_TYPE } from '../enums/users.enum';
+import { ROLES } from '../enums/users.enum';
 
 export const authorizeRequest = (req: CustomRequest, res: Response, next: NextFunction) => {
     try {
@@ -20,7 +20,7 @@ export const authorizeRequest = (req: CustomRequest, res: Response, next: NextFu
         const username: string = userData.username;
 
         // Since we are not using any database here for authentication, having the below restriction will help distinguishing
-        const userType: USER_TYPE = username.startsWith("tutor") ? USER_TYPE.TUTOR : USER_TYPE.STUDENT;
+        const userType: ROLES = username.startsWith("tutor") ? ROLES.TUTOR : ROLES.STUDENT;
 
         // Appending user data to the request object to be used later
         // In an ideal world, we would be making a DB call here to get and set user data :)
