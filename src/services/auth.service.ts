@@ -1,13 +1,37 @@
 import jwt from 'jsonwebtoken';
 import config from '../../config';
-import { TokenPayload } from '../interfaces/auth.interface';
+import { AuthPayload } from '../interfaces/auth.interface';
+import { createUser, getUserDetails } from '../models/user';
+import { UserAttributes } from '../interfaces/models.interface';
+import { ROLES } from '../enums/users.enum';
 
-export const login = (username: string, password: string): { token: string } => {
-    const payload: TokenPayload = {
-        username
-    };
+export const login = async (username: string, password: string): Promise<{ token: string }> => {
     console.log(`Generating auth for user : ${username}`);
-    const authToken = jwt.sign(payload, config.JWT_PASSPHRASE);  // Uses HS256 by default which is fine for this use case
+
+    const dbUsername = username.toLowerCase();    // Our system will be having case insensitive username coz why not?
+    let user = await getUserDetails(dbUsername);
+    let userDetails: UserAttributes;
+
+    if (user) {
+        userDetails = user.toJSON();
+    }
+    else {
+        // Create new user
+        // Ideally we should be getting the role from UI during sign-up but having some random logic here
+        // If the username starts with tutor, the role will be tutor.. Otherwise, student.
+        const role = dbUsername.startsWith(ROLES.TUTOR) ? ROLES.TUTOR : ROLES.STUDENT;
+        const createdUser = await createUser(dbUsername, password, role);
+        userDetails = createdUser.toJSON();
+    }
+
+    console.log(`User details`, userDetails);
+
+    const payload: AuthPayload = {
+        username: userDetails.username,
+        userRole: userDetails.role
+    };
+
+    const authToken = jwt.sign(payload, config.JWT_PASSPHRASE, { expiresIn: '1h' });  // Uses HS256 by default which is fine here
     return {
         token: authToken
     }

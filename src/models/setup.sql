@@ -6,8 +6,7 @@ USE TEST_DEV_DB;
 
 -- Create Role Table
 CREATE TABLE roles (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(255) NOT NULL
+  name VARCHAR(255) NOT NULL PRIMARY KEY
 );
 
 -- Create User Table
@@ -15,8 +14,8 @@ CREATE TABLE users (
   id INT AUTO_INCREMENT PRIMARY KEY,
   username VARCHAR(255) NOT NULL,
   password VARCHAR(255) NOT NULL,
-  roleId INT NOT NULL,
-  FOREIGN KEY (roleId) REFERENCES roles(id)
+  role VARCHAR(255) NOT NULL,
+  FOREIGN KEY (role) REFERENCES roles(name)
 );
 
 -- Create Classroom Table
@@ -44,11 +43,11 @@ CREATE TABLE files (
 
 
 --- INSERT ROLES
-INSERT INTO roles(name) values('tutor'),('student');
+INSERT INTO roles values('tutor'),('student');
 
 -- INSERT DUMMY DATA
 -- Insert a Tutor User
-INSERT INTO users (username, password, roleId) VALUES ('tutor1', 'pass123', 1);
+INSERT INTO users (username, password, role) VALUES ('tutor1', 'pass123', 'tutor');
 
 -- Insert a Student User
-INSERT INTO users (username, password, roleId) VALUES ('student1', 'pass456', 2);
+INSERT INTO users (username, password, role) VALUES ('student1', 'pass456', 'student');

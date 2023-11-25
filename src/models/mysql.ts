@@ -1,6 +1,7 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
 import config from '../../config';
-import { ClassroomAttributes, ClassroomCreationAttributes, FileAttributes, FileCreationAttributes, RoleAttributes, RoleCreationAttributes, UserAttributes, UserCreationAttributes } from '../interfaces/models.interface';
+import { ClassroomAttributes, ClassroomCreationAttributes, FileAttributes, FileCreationAttributes, RoleAttributes, UserAttributes, UserCreationAttributes } from '../interfaces/models.interface';
+import { ROLES } from '../enums/users.enum';
 
 // Sequelize connection configuration
 export const sequelize = new Sequelize({
@@ -9,35 +10,32 @@ export const sequelize = new Sequelize({
     username: config.MYSQL.USER,
     password: config.MYSQL.PASSWORD,
     database: config.MYSQL.DATABASE,
-    logging: (...msg) => console.log(msg),
+    logging: console.log,
 });
 
-export class Role extends Model<RoleAttributes, RoleCreationAttributes> implements RoleAttributes {
+export class Role extends Model<RoleAttributes, RoleAttributes> implements RoleAttributes {
     public id!: number;
-    public name!: 'tutor' | 'student';
+    public name!: ROLES;
 }
 
 Role.init({
-    id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-    },
     name: {
         type: DataTypes.ENUM('tutor', 'student'),
         allowNull: false,
+        primaryKey: true
     },
 }, {
     sequelize,
     modelName: 'Role',
     tableName: 'roles',
+    timestamps: false
 });
 
 export class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
     public id!: number;
     public username!: string;
     public password!: string;
-    public roleId!: number;
+    public role!: ROLES;
 }
 
 User.init({
@@ -54,8 +52,8 @@ User.init({
         type: DataTypes.STRING,
         allowNull: false,
     },
-    roleId: {
-        type: DataTypes.INTEGER,
+    role: {
+        type: DataTypes.ENUM(ROLES.TUTOR, ROLES.STUDENT),
         allowNull: false,
     },
 }, {
@@ -64,8 +62,8 @@ User.init({
     tableName: 'users',
 });
 
-User.belongsTo(Role, { foreignKey: 'roleId' });
-Role.hasMany(User, { foreignKey: 'roleId' });
+User.belongsTo(Role, { foreignKey: 'role' });
+Role.hasMany(User, { foreignKey: 'role' });
 
 export class Classroom extends Model<ClassroomAttributes, ClassroomCreationAttributes> implements ClassroomAttributes {
     public id!: number;
@@ -150,3 +148,22 @@ File.init({
 File.belongsTo(Classroom, { foreignKey: 'classroomId' });
 File.belongsTo(User, { foreignKey: 'uploadedBy' });
 Classroom.hasMany(File, { foreignKey: 'classroomId' });
+
+export const initDatabase = async () => {
+    // Verify connection with the database
+    await sequelize.authenticate();
+
+    // SYNC Models with database tables
+    await sequelize.sync({ force: true });
+
+    // Insert initial values required for Application to run. In this case roles.
+    // In prod code this wouldn't be there as those seed data are inserted manually during initial table creation using deployment/setup scripts.
+    try {
+        await Role.create({ name: ROLES.TUTOR });
+    }
+    catch (err) { }
+    try {
+        await Role.create({ name: ROLES.STUDENT });
+    }
+    catch (err) { }
+}

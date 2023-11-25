@@ -7,8 +7,8 @@ const router = express.Router();
 router.use(authorizeRequest);
 
 router.get("/", (req: CustomRequest, res: Response) => {
-    console.log(req.username);
-    console.log(req.userType);
+    console.log(req.userDetails?.username);
+    console.log(req.userDetails?.userRole);
     res.send("CLASSROOM!");
 });
 

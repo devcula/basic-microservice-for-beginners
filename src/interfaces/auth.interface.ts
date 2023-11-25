@@ -1,11 +1,11 @@
 import { Request } from "express";
 import { ROLES } from "../enums/users.enum";
 
-export interface TokenPayload {
+export interface AuthPayload {
     username: string;
+    userRole: ROLES;
 }
 
 export interface CustomRequest extends Request {
-    username?: string;
-    userType?: ROLES;
+    userDetails: AuthPayload;
 }

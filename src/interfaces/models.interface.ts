@@ -3,19 +3,17 @@
  */
 
 import { Model, DataTypes, Optional } from 'sequelize';
+import { ROLES } from '../enums/users.enum';
 
 export interface RoleAttributes {
-    id: number;
-    name: 'tutor' | 'student';
+    name: ROLES;
 }
-
-export interface RoleCreationAttributes extends Optional<RoleAttributes, 'id'> { }
 
 export interface UserAttributes {
     id: number;
     username: string;
     password: string;
-    roleId: number;
+    role: ROLES;
 }
 
 export interface UserCreationAttributes extends Optional<UserAttributes, 'id'> { }
@@ -24,6 +22,8 @@ export interface ClassroomAttributes {
     id: number;
     tutorId: number;
     className: string;
+    // Not required fields added below to be used in case of JOIN queries
+    User?: Partial<UserAttributes>;
 }
 
 export interface ClassroomCreationAttributes extends Optional<ClassroomAttributes, 'id'> { }
@@ -37,6 +37,9 @@ export interface FileAttributes {
     uploadedBy: number;
     deleted: boolean;
     fileType: 'audio' | 'video' | 'image' | 'url';
+    // Not required fields added below to be used in case of JOIN queries
+    Classroom?: Partial<ClassroomAttributes>;
+    User?: Partial<UserAttributes>;
 }
 
 export interface FileCreationAttributes extends Optional<FileAttributes, 'id'> { }

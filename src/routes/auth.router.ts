@@ -8,14 +8,14 @@ router.get("/", (req, res) => {
     res.send('AUTH!');
 });
 
-router.post("/login", (req, res) => {
+router.post("/login", async (req, res) => {
     try {
         const { username, password } = req.body;
         if (!username || !password) {
             throw new ValidationError("Username and password are mandatory");
         }
 
-        const response = AuthService.login(username, password);
+        const response = await AuthService.login(username, password);
         res.status(200).json({ data: response });
     }
     catch (err) {

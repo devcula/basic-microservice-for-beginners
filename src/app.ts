@@ -4,7 +4,7 @@ import cors from 'cors';
 import AuthRouter from './routes/auth.router';
 import ClassRoomRouter from './routes/classroom.router';
 import { config } from 'dotenv';
-import { sequelize as sequelizeInstance } from './models/mysql';
+import { initDatabase, sequelize as sequelizeInstance } from './models/mysql';
 
 config();   // Load config like secrets etc in process.env to be accessible everywhere
 
@@ -24,8 +24,8 @@ const allRoutes = [
 ];
 
 async function startServer() {
-    // Check SQL connection
-    await sequelizeInstance.authenticate();
+    // Initialise database
+    await initDatabase();
 
     // Add middlewares
     app.use(bodyParser.json());
@@ -54,12 +54,13 @@ async function startServer() {
         console.error('[GLOBAL] unhandled rejection', error);
     });
 
-    // Close Sequelize connection on server exit
+    // Do cleanup operations on server shutdown.
     process.on('SIGINT', async () => {
         try {
-            // Close Sequelize connection
+            // Close Database connection
             await sequelizeInstance.close();
             console.log('Sequelize connection closed.');
+
             // Close the Express server
             server.close(() => {
                 console.log('Server closed.');
