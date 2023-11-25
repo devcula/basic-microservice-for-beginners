@@ -1,8 +1,9 @@
-import { DataTypes, Sequelize } from 'sequelize';
+import { DataTypes, Model, Sequelize } from 'sequelize';
 import config from '../../config';
+import { ClassroomAttributes, ClassroomCreationAttributes, FileAttributes, FileCreationAttributes, RoleAttributes, RoleCreationAttributes, UserAttributes, UserCreationAttributes } from '../interfaces/models.interface';
 
 // Sequelize connection configuration
-const sequelize = new Sequelize({
+export const sequelize = new Sequelize({
     dialect: 'mysql',
     host: config.MYSQL.HOST,
     username: config.MYSQL.USER,
@@ -11,7 +12,12 @@ const sequelize = new Sequelize({
     logging: (...msg) => console.log(msg),
 });
 
-const Role = sequelize.define('Role', {
+export class Role extends Model<RoleAttributes, RoleCreationAttributes> implements RoleAttributes {
+    public id!: number;
+    public name!: 'tutor' | 'student';
+}
+
+Role.init({
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -21,9 +27,20 @@ const Role = sequelize.define('Role', {
         type: DataTypes.ENUM('tutor', 'student'),
         allowNull: false,
     },
-}, { tableName: "roles" });
+}, {
+    sequelize,
+    modelName: 'Role',
+    tableName: 'roles',
+});
 
-const User = sequelize.define('User', {
+export class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
+    public id!: number;
+    public username!: string;
+    public password!: string;
+    public roleId!: number;
+}
+
+User.init({
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -41,12 +58,22 @@ const User = sequelize.define('User', {
         type: DataTypes.INTEGER,
         allowNull: false,
     },
-}, { tableName: "users" });
+}, {
+    sequelize,
+    modelName: 'User',
+    tableName: 'users',
+});
 
 User.belongsTo(Role, { foreignKey: 'roleId' });
 Role.hasMany(User, { foreignKey: 'roleId' });
 
-const Classroom = sequelize.define('Classroom', {
+export class Classroom extends Model<ClassroomAttributes, ClassroomCreationAttributes> implements ClassroomAttributes {
+    public id!: number;
+    public tutorId!: number;
+    public className!: string;
+}
+
+Classroom.init({
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -60,13 +87,27 @@ const Classroom = sequelize.define('Classroom', {
         type: DataTypes.STRING,
         allowNull: false,
     },
-}, { tableName: "classrooms" });
+}, {
+    sequelize,
+    modelName: 'Classroom',
+    tableName: 'classrooms',
+});
 
 Classroom.belongsTo(User, { foreignKey: 'tutorId' });
 User.hasMany(Classroom, { foreignKey: 'tutorId' });
 
+export class File extends Model<FileAttributes, FileCreationAttributes> implements FileAttributes {
+    public id!: number;
+    public classroomId!: number;
+    public filename!: string;
+    public description!: string;
+    public uploadedAt!: Date;
+    public uploadedBy!: number;
+    public deleted!: boolean;
+    public fileType!: 'audio' | 'video' | 'image' | 'url';
+}
 
-const File = sequelize.define('File', {
+File.init({
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -100,12 +141,12 @@ const File = sequelize.define('File', {
         type: DataTypes.ENUM('audio', 'video', 'image', 'url'),
         allowNull: false,
     },
-}, { tableName: "files" });
+}, {
+    sequelize,
+    modelName: 'File',
+    tableName: 'files',
+});
 
 File.belongsTo(Classroom, { foreignKey: 'classroomId' });
 File.belongsTo(User, { foreignKey: 'uploadedBy' });
 Classroom.hasMany(File, { foreignKey: 'classroomId' });
-
-// sequelize.sync({ force: true });
-
-export default sequelize;

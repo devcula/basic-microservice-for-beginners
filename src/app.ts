@@ -4,8 +4,7 @@ import cors from 'cors';
 import AuthRouter from './routes/auth.router';
 import ClassRoomRouter from './routes/classroom.router';
 import { config } from 'dotenv';
-import { authorizeRequest } from './middlewares/auth.middleware';
-import sequelize from './models/mysql';
+import { sequelize as sequelizeInstance } from './models/mysql';
 
 config();   // Load config like secrets etc in process.env to be accessible everywhere
 
@@ -26,7 +25,7 @@ const allRoutes = [
 
 async function startServer() {
     // Check SQL connection
-    await sequelize.authenticate();
+    await sequelizeInstance.authenticate();
 
     // Add middlewares
     app.use(bodyParser.json());
@@ -59,7 +58,7 @@ async function startServer() {
     process.on('SIGINT', async () => {
         try {
             // Close Sequelize connection
-            await sequelize.close();
+            await sequelizeInstance.close();
             console.log('Sequelize connection closed.');
             // Close the Express server
             server.close(() => {
