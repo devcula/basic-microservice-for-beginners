@@ -1,6 +1,6 @@
 import express from 'express';
 import { ValidationError } from '../errors/validation.error';
-import * as AuthController from '../controllers/auth.controller';
+import * as AuthService from '../services/auth.service';
 
 const router = express.Router();
 
@@ -15,7 +15,7 @@ router.post("/login", (req, res) => {
             throw new ValidationError("Username and password are mandatory");
         }
 
-        const response = AuthController.login(username, password);
+        const response = AuthService.login(username, password);
         res.status(200).json({ data: response });
     }
     catch (err) {
