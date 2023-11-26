@@ -1,0 +1,48 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+Table roles {
+  name enum('tutor', 'student') [primary key]
+}
+
+Table users {
+  id int [pk]
+  username varchar [not null]
+  password varchar [not null]
+  role varchar [not null]
+  createdAt datetime [not null]
+  updatedAt datetime [not null]
+}
+
+Table classrooms {
+  id int [pk]
+  tutorId int [not null]
+  className varchar [not null]
+  createdAt datetime [not null]
+  updatedAt datetime [not null]
+}
+
+Table files {
+  id int [pk]
+  classroomId int [not null]
+  filename varchar [not null]
+  description text [not null]
+  uploadedAt datetime [not null]
+  uploadedBy int [not null]
+  deleted boolean [default: false]
+  fileType enum('audio', 'video', 'image', 'url') [not null]
+  createdAt datetime [not null]
+  updatedAt datetime [not null]
+}
+
+Table classroom_students {
+  studentId int [pk]
+  classroomId int [pk]
+}
+
+Ref: users.role > roles.name
+Ref: classrooms.tutorId > users.id
+Ref: files.classroomId > classrooms.id
+Ref: classroom_students.studentId > users.id
+Ref: classroom_students.classroomId > classrooms.id
+Ref: files.uploadedBy > users.id
