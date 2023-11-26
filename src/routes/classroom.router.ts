@@ -21,10 +21,6 @@ router.post("/create", authorizeTutor, async (req: CustomRequest, res: Response)
         if (!className) {
             throw new ValidationError('Class name is mandatory to create classroom');
         }
-        if (!tutor?.userId) {
-            // This should never be the case if flow is reaching this handler. But, it never hurts to put an extra check.
-            throw new ValidationError('Kindly login and try again');
-        }
 
         const classroom = await ClassroomService.createClassroom(className, tutor.userId);
         res.status(200).json({ classroom: classroom });
@@ -50,9 +46,6 @@ router.post("/addStudents", authorizeTutor, async (req: CustomRequest, res: Resp
             // Expecting list of student usernames here
             throw new ValidationError('List of students is mandatory');
         }
-        if (!tutor?.userId) {
-            throw new ValidationError('Kindly login and try again');
-        }
 
         await ClassroomService.addStudents(tutor.userId, classroomId, students);
         res.status(200).json({ message: "Success" });
@@ -74,9 +67,6 @@ router.delete("/removeStudent", authorizeTutor, async (req: CustomRequest, res: 
         if (!student) {
             // Expecting student username
             throw new ValidationError('student(username) is mandatory');
-        }
-        if (!tutor?.userId) {
-            throw new ValidationError('Kindly login and try again');
         }
 
         await ClassroomService.removeStudent(tutor.userId, classroomId, student);

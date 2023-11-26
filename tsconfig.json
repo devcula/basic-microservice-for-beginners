@@ -8,10 +8,16 @@
         "outDir": "./dist",
         "skipLibCheck": true,
         "noImplicitAny": true,
-        "lib": ["ES2021"],
+        "lib": [
+            "ES2021"
+        ],
         "removeComments": true,
     },
-    "include": ["src/**/*.ts"],
+    "include": [
+        "src/**/*.ts",
+        "app.ts",
+        "fileStorage.ts"
+    ],
     "exclude": [
         "node_modules"
     ]

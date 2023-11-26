@@ -1,10 +1,11 @@
 import express from 'express';
 import * as bodyParser from 'body-parser';
 import cors from 'cors';
-import AuthRouter from './routes/auth.router';
-import ClassRoomRouter from './routes/classroom.router';
+import AuthRouter from './src/routes/auth.router';
+import ClassRoomRouter from './src/routes/classroom.router';
+import FileRouter from './src/routes/files.router';
 import { config } from 'dotenv';
-import { initDatabase, sequelize as sequelizeInstance } from './models/mysql';
+import { initDatabase, sequelize as sequelizeInstance } from './src/models/mysql';
 
 config();   // Load config like secrets etc in process.env to be accessible everywhere
 
@@ -20,6 +21,10 @@ const allRoutes = [
     {
         path: "/classroom",
         router: ClassRoomRouter
+    },
+    {
+        path: "/file",
+        router: FileRouter
     }
 ];
 

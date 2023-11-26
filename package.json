@@ -18,6 +18,7 @@
     "@types/express": "^4.17.1",
     "@types/jsonwebtoken": "^9.0.5",
     "@types/lodash": "^4.14.202",
+    "@types/multer": "^1.4.11",
     "@typescript-eslint/eslint-plugin": "^6.11.0",
     "@typescript-eslint/parser": "^6.11.0",
     "eslint": "^8.53.0",
@@ -30,6 +31,7 @@
     "express": "^4.17.1",
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
+    "multer": "^1.4.5-lts.1",
     "mysql2": "^3.6.4",
     "sequelize": "^6.35.1"
   }

@@ -6,6 +6,6 @@
     "watch": [
         "src"
     ],
-    "exec": "ts-node --files src/app.ts",
+    "exec": "ts-node --files app.ts",
     "ext": "ts"
 }
