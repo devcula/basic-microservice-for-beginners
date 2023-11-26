@@ -23,6 +23,7 @@ export const authorizeRequest = (req: CustomRequest, res: Response, next: NextFu
         next();
     }
     catch (err) {
-        res.status(401).json({ error: err.message || "UnAuthorized" });
+        console.log('Error in Auth Middleware', err.message)
+        res.status(401).json({ error: "UnAuthorized" });
     }
 }

@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import config from '../../config';
 import { AuthPayload } from '../interfaces/auth.interface';
-import { createUser, getUserDetails } from '../models/user';
+import * as UserModel from '../models/user.model';
 import { UserAttributes } from '../interfaces/models.interface';
 import { ROLES } from '../enums/users.enum';
 
@@ -9,10 +9,14 @@ export const login = async (username: string, password: string): Promise<{ token
     console.log(`Generating auth for user : ${username}`);
 
     const dbUsername = username.toLowerCase();    // Our system will be having case insensitive username coz why not?
-    let user = await getUserDetails(dbUsername);
+    let user = await UserModel.getUserDetails(dbUsername);
     let userDetails: UserAttributes;
 
     if (user) {
+        // Here, We should have hashed the received password to SHA256 here and matched with the db password
+        // However for test purposes, we are not doing that
+        // Best way would be to create a authenticate fn in User model,
+        // Then authenticate the user by matching username and hashed pwd in DB only without even fetching the password
         userDetails = user.toJSON();
     }
     else {
@@ -20,7 +24,7 @@ export const login = async (username: string, password: string): Promise<{ token
         // Ideally we should be getting the role from UI during sign-up but having some random logic here
         // If the username starts with tutor, the role will be tutor.. Otherwise, student.
         const role = dbUsername.startsWith(ROLES.TUTOR) ? ROLES.TUTOR : ROLES.STUDENT;
-        const createdUser = await createUser(dbUsername, password, role);
+        const createdUser = await UserModel.createUser(dbUsername, password, role);
         userDetails = createdUser.toJSON();
     }
 
