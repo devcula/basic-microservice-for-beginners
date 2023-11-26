@@ -1,6 +1,6 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
 import config from '../../config';
-import { ClassroomAttributes, ClassroomCreationAttributes, FileAttributes, FileCreationAttributes, RoleAttributes, UserAttributes, UserCreationAttributes } from '../interfaces/models.interface';
+import { ClassroomAttributes, ClassroomCreationAttributes, ClassroomStudentAttributes, FileAttributes, FileCreationAttributes, RoleAttributes, UserAttributes, UserCreationAttributes } from '../interfaces/models.interface';
 import { ROLES } from '../enums/users.enum';
 
 // Sequelize connection configuration
@@ -149,21 +149,45 @@ File.belongsTo(Classroom, { foreignKey: 'classroomId' });
 File.belongsTo(User, { foreignKey: 'uploadedBy' });
 Classroom.hasMany(File, { foreignKey: 'classroomId' });
 
+export class ClassroomStudent extends Model<ClassroomStudentAttributes> implements ClassroomStudentAttributes {
+    public studentId!: number;
+    public classroomId!: number;
+}
+
+ClassroomStudent.init({
+    studentId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        primaryKey: true,
+    },
+    classroomId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        primaryKey: true,
+    },
+}, {
+    sequelize,
+    modelName: 'ClassroomStudent',
+    tableName: 'classroom_students',
+});
+
+// Define associations in Classroom and User models
+Classroom.belongsToMany(User, { through: 'ClassroomStudent', foreignKey: 'classroomId' });
+User.belongsToMany(Classroom, { through: 'ClassroomStudent', foreignKey: 'studentId' });
+
 export const initDatabase = async () => {
     // Verify connection with the database
     await sequelize.authenticate();
 
     // SYNC Models with database tables
-    await sequelize.sync({ force: true });
+    await sequelize.sync({ alter: true });
 
     // Insert initial values required for Application to run. In this case roles.
     // In prod code this wouldn't be there as those seed data are inserted manually during initial table creation using deployment/setup scripts.
-    try {
-        await Role.create({ name: ROLES.TUTOR });
+    for (const [key, value] of Object.entries(ROLES)) {
+        try {
+            await Role.create({ name: value });
+        }
+        catch (err) { }
     }
-    catch (err) { }
-    try {
-        await Role.create({ name: ROLES.STUDENT });
-    }
-    catch (err) { }
 }

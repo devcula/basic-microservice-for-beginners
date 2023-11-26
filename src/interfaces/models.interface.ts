@@ -43,3 +43,8 @@ export interface FileAttributes {
 }
 
 export interface FileCreationAttributes extends Optional<FileAttributes, 'id'> { }
+
+export interface ClassroomStudentAttributes {
+    studentId: number;
+    classroomId: number;
+}

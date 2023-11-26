@@ -6,7 +6,7 @@ import crypto from 'crypto';
 export const getUserDetails = async (username: string): Promise<User> => {
     const user = await User.findOne({
         where: { username },
-        attributes: ['username', 'role'],
+        attributes: ['username', 'role', 'id'],
     });
 
     return user;    // { username: 'tutor1', role: 'tutor' }
