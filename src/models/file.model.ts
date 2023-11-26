@@ -1,5 +1,7 @@
+import { FindOptions, Op } from "sequelize";
+import { FILE_TYPES } from "../enums/files.enum";
 import { FileDetails } from "../interfaces/files.interface";
-import { FileCreationAttributes } from "../interfaces/models.interface";
+import { FileAttributes, FileCreationAttributes } from "../interfaces/models.interface";
 import { File } from "./mysql";
 
 export const saveFileDetailsToDB = async (tutorId: number, classroomId: number, file: FileDetails) => {
@@ -29,6 +31,28 @@ export const renameFile = async (fileId: number, newFilename: string) => {
 }
 
 export const deleteFile = async (fileId: number) => {
-    // Update filename in the database
-    await File.destroy({ where: { id: fileId } });
+    // Soft deleting the file
+    await File.update({ deleted: true }, { where: { id: fileId } });
+}
+
+export const getFilesByClassroom = async (classroomId: number, searchTerm?: string, fileType?: FILE_TYPES) => {
+    const filterQuery: any = {
+        where: {
+            classroomId,
+            deleted: false
+        }
+    };
+
+    if (searchTerm) {
+        filterQuery.where.filename = {
+            [Op.substring]: searchTerm
+        }
+    }
+
+    if (fileType) {
+        filterQuery.where.fileType = fileType
+    }
+
+    const filesMetadata = await File.findAll(filterQuery);
+    return filesMetadata;
 }

@@ -31,3 +31,12 @@ export interface FileDetails {
   fileLocation: string;
   filename: string;
 }
+
+export interface FileFeed {
+  fileId: number;
+  filename: string;
+  fileType: FILE_TYPES;
+  fileDescription: string;
+  data?: any;
+  url?: string;
+}

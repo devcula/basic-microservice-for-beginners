@@ -23,7 +23,6 @@ export const addStudents = async (tutorId: number, classroomId: number, students
 
     // We can add a filter here for role === student, so that only students get added.
     // But why is it required? Why can't a tutor add another tutor to the classroom?
-    // Add the students
     await ClassroomModel.addStudents(classroomId, studentsData);
 }
 
@@ -69,4 +68,9 @@ export const getFeed = async (role: ROLES, userId: number) => {
     }
 
     return classroomFeed;
+}
+
+export const isUserPartOfClassroom = async (userId: number, classroomId: number) => {
+    const classroomStudent = await ClassroomModel.getStudentClassroom(userId, classroomId);
+    return Boolean(classroomStudent);
 }

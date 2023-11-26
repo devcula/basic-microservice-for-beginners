@@ -59,3 +59,10 @@ export const getClassroomsByStudent = async (studentId: number) => {
 
     return classrooms;
 }
+
+export const getStudentClassroom = async (studentId: number, classroomId: number) => {
+    const result = await ClassroomStudent.findOne({
+        where: { studentId, classroomId }
+    });
+    return result;
+}

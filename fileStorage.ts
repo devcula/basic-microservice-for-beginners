@@ -45,3 +45,15 @@ export const deleteFile = (filePath: string) => {
     }
     catch (err) { }
 }
+
+export const getFileData = (filePath: string) => {
+    let data: any = '';
+    try {
+        data = fs.readFileSync(filePath).toString('base64');
+    }
+    catch (err) {
+        console.log("Error while reading file", err);
+    }
+
+    return data;
+}

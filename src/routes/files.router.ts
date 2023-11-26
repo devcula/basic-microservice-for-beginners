@@ -92,4 +92,29 @@ router.delete('/delete', authorizeTutor, async (req: CustomRequest, res: Respons
     }
 });
 
+router.get("/feed", async (req: CustomRequest, res: Response) => {
+    const userDetails = req.userDetails;
+    const { classroomId, fileType, searchTerm = '' } = req.query;
+    try {
+        if (!classroomId) {
+            throw new ValidationError("classroomId is required for getting files feed");
+        }
+        if (fileType && !Object.values(FILE_TYPES).includes(fileType.toString() as FILE_TYPES)) {
+            throw new ValidationError('Incorrect fileType filter applied');
+        }
+        const filesFeed = await FileService.getFeed(
+            userDetails.userRole,
+            userDetails.userId,
+            parseInt(classroomId.toString()),
+            searchTerm.toString(),
+            fileType?.toString() as FILE_TYPES
+        );
+        res.status(200).json({ feed: filesFeed });
+    }
+    catch (err) {
+        console.log("Error while fetching files feed", err);
+        res.status(500).json({ error: err?.message });
+    }
+});
+
 export default router;
