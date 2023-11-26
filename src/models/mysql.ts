@@ -2,6 +2,7 @@ import { DataTypes, Model, Sequelize } from 'sequelize';
 import config from '../../config';
 import { ClassroomAttributes, ClassroomCreationAttributes, ClassroomStudentAttributes, FileAttributes, FileCreationAttributes, RoleAttributes, UserAttributes, UserCreationAttributes } from '../interfaces/models.interface';
 import { ROLES } from '../enums/users.enum';
+import { FILE_TYPES } from '../enums/files.enum';
 
 // Sequelize connection configuration
 export const sequelize = new Sequelize({
@@ -20,7 +21,7 @@ export class Role extends Model<RoleAttributes, RoleAttributes> implements RoleA
 
 Role.init({
     name: {
-        type: DataTypes.ENUM('tutor', 'student'),
+        type: DataTypes.ENUM(...Object.values(ROLES)),
         allowNull: false,
         primaryKey: true
     },
@@ -102,7 +103,8 @@ export class File extends Model<FileAttributes, FileCreationAttributes> implemen
     public uploadedAt!: Date;
     public uploadedBy!: number;
     public deleted!: boolean;
-    public fileType!: 'audio' | 'video' | 'image' | 'url';
+    public fileType!: FILE_TYPES;
+    public fileLocation!: string;
 }
 
 File.init({
@@ -136,9 +138,13 @@ File.init({
         defaultValue: false
     },
     fileType: {
-        type: DataTypes.ENUM('audio', 'video', 'image', 'url'),
+        type: DataTypes.ENUM(...Object.values(FILE_TYPES)),
         allowNull: false,
     },
+    fileLocation: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    }
 }, {
     sequelize,
     modelName: 'File',

@@ -2,8 +2,9 @@
  * This file contains all the interfaces with same structure as DB tables. This will help us in defining sequelize models with proper types.
  */
 
-import { Model, DataTypes, Optional } from 'sequelize';
+import { Optional } from 'sequelize';
 import { ROLES } from '../enums/users.enum';
+import { FILE_TYPES } from '../enums/files.enum';
 
 export interface RoleAttributes {
     name: ROLES;
@@ -36,7 +37,8 @@ export interface FileAttributes {
     uploadedAt: Date;
     uploadedBy: number;
     deleted: boolean;
-    fileType: 'audio' | 'video' | 'image' | 'url';
+    fileType: FILE_TYPES;
+    fileLocation: string;   // Can be a url or directory path on the server
     // Not required fields added below to be used in case of JOIN queries
     Classroom?: Partial<ClassroomAttributes>;
     User?: Partial<UserAttributes>;

@@ -16,8 +16,9 @@ import fs from 'fs';
 // Check if the upload directory exists
 // If not, create one
 // NOTE: A new directory uploads/ will be created where all the uploaded files will be written
+const uploadDirName = 'uploads';
 
-const uploadsDir = path.join(__dirname, 'uploads');
+const uploadsDir = path.join(__dirname, uploadDirName);
 if (!fs.existsSync(uploadsDir)) {
     // If not, create the directory
     fs.mkdirSync(uploadsDir);
@@ -26,7 +27,7 @@ if (!fs.existsSync(uploadsDir)) {
 export const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         // Function to get the destination folder
-        cb(null, 'uploads/');
+        cb(null, `${uploadDirName}/`);
     },
     filename: function (req, file, cb) {
         // This function will be called to get the filename for the file. Return unique file names from here.
