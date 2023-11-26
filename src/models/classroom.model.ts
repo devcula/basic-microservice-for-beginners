@@ -33,3 +33,12 @@ export const getClassroomDetails = async (classroomId: number): Promise<Classroo
 
     return classroom;
 }
+
+export const removeStudent = async (classroomId: number, student: User) => {
+    await ClassroomStudent.destroy({
+        where: {
+            classroomId,
+            studentId: student.get('id')
+        }
+    });
+}

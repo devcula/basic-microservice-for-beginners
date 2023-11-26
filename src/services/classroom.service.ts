@@ -23,3 +23,20 @@ export const addStudents = async (tutorId: number, classroomId: number, students
     // Add the students
     await ClassroomModel.addStudents(classroomId, studentsData);
 }
+
+export const removeStudent = async (tutorId: number, classroomId: number, student: string) => {
+    const classroomDetails = await ClassroomModel.getClassroomDetails(classroomId);
+    if (!classroomDetails) {
+        throw new Error("Classroom not found");
+    }
+    if (classroomDetails.toJSON().tutorId !== tutorId) {
+        throw new Error("This account doesn't have access to remove students from this classroom");
+    }
+
+    const studentData = await UserModel.getUserDetails(student);
+    if (!studentData) {
+        return;
+    }
+
+    await ClassroomModel.removeStudent(classroomId, studentData);
+}

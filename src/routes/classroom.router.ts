@@ -36,6 +36,9 @@ router.post("/create", authorizeTutor, async (req: CustomRequest, res: Response)
 });
 
 router.post("/addStudents", authorizeTutor, async (req: CustomRequest, res: Response) => {
+    /**
+     * This route can add one or more students based on requirement.
+     */
     try {
         const tutor = req.userDetails;
         const { classroomId, students } = req.body;
@@ -45,13 +48,38 @@ router.post("/addStudents", authorizeTutor, async (req: CustomRequest, res: Resp
         }
         if (!Array.isArray(students)) {
             // Expecting list of student usernames here
-            throw new Error('List of students is mandatory');
+            throw new ValidationError('List of students is mandatory');
         }
         if (!tutor?.userId) {
             throw new ValidationError('Kindly login and try again');
         }
 
         await ClassroomService.addStudents(tutor.userId, classroomId, students);
+        res.status(200).json({ message: "Success" });
+    }
+    catch (err) {
+        const statusCode = err instanceof ValidationError ? 400 : 500;
+        res.status(statusCode).json({ error: err?.message });
+    }
+});
+
+router.delete("/removeStudent", authorizeTutor, async (req: CustomRequest, res: Response) => {
+    try {
+        const tutor = req.userDetails;
+        const { classroomId, student } = req.body;
+
+        if (!classroomId) {
+            throw new ValidationError('Classroom Id is mandatory to remove students');
+        }
+        if (!student) {
+            // Expecting student username
+            throw new ValidationError('student(username) is mandatory');
+        }
+        if (!tutor?.userId) {
+            throw new ValidationError('Kindly login and try again');
+        }
+
+        await ClassroomService.removeStudent(tutor.userId, classroomId, student);
         res.status(200).json({ message: "Success" });
     }
     catch (err) {
