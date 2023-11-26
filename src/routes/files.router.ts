@@ -44,10 +44,49 @@ router.post("/upload", authorizeTutor, handleFileUpload, async (req: CustomReque
         res.status(200).json({ message: 'Files uploaded successfully', fileDetails: savedFileDetails });
     }
     catch (err) {
+        console.log("Error while uploading file", err);
         // If file already saved in the file system, delete them in case of any error.
         if (uploadedFile) {
             deleteFile(uploadedFile.path);
         }
+        const statusCode = err instanceof ValidationError ? 400 : 500;
+        res.status(statusCode).json({ error: err?.message });
+    }
+});
+
+router.put('/rename', authorizeTutor, async (req: CustomRequest, res: Response) => {
+    try {
+        const tutor = req.userDetails;
+        const { fileId, filename } = req.body;
+
+        if (!fileId || !filename) {
+            throw new ValidationError("fileId and filename are mandatory to rename");
+        }
+
+        await FileService.renameFile(tutor.userId, parseInt(fileId), filename);
+
+        res.json({ message: 'File renamed successfully' });
+    } catch (err) {
+        console.error('Error renaming file:', err);
+        const statusCode = err instanceof ValidationError ? 400 : 500;
+        res.status(statusCode).json({ error: err?.message });
+    }
+});
+
+router.delete('/delete', authorizeTutor, async (req: CustomRequest, res: Response) => {
+    try {
+        const tutor = req.userDetails;
+        const { fileId } = req.body;
+
+        if (!fileId) {
+            throw new ValidationError("fileId is mandatory to delete");
+        }
+
+        await FileService.deleteFile(tutor.userId, parseInt(fileId));
+
+        res.json({ message: 'File deleted successfully' });
+    } catch (err) {
+        console.error('Error deleting file:', err);
         const statusCode = err instanceof ValidationError ? 400 : 500;
         res.status(statusCode).json({ error: err?.message });
     }

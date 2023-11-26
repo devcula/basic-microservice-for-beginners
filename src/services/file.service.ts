@@ -4,6 +4,7 @@ import { KeyValue } from "../interfaces/common.interface";
 import { FileDetails, UploadedFile } from "../interfaces/files.interface";
 import * as FileModel from "../models/file.model";
 import * as ClassroomModel from "../models/classroom.model";
+import { deleteFile as deleteFileFromStorage } from "../../fileStorage";
 
 export const saveUploadedFileToDB = async (tutorId: number, classroomId: number, body: KeyValue, uploadedFile?: UploadedFile) => {
     const fileType: FILE_TYPES = body.fileType;
@@ -44,4 +45,31 @@ export const saveUploadedFileToDB = async (tutorId: number, classroomId: number,
 
     const createdFile = await FileModel.saveFileDetailsToDB(tutorId, classroomId, fileDetailsToSave);
     return createdFile?.toJSON();
+}
+
+export const renameFile = async (tutorId: number, fileId: number, newFilename: string) => {
+    const fileDetails = await FileModel.getFileDetails(fileId);
+
+    if (!fileDetails) {
+        throw new Error("File doesn't exist");
+    }
+    if (fileDetails.toJSON().uploadedBy !== tutorId) {
+        throw new Error("Only the tutor who uploaded the file can rename it");
+    }
+
+    await FileModel.renameFile(fileId, newFilename);
+}
+
+export const deleteFile = async (tutorId: number, fileId: number) => {
+    const fileDetails = await FileModel.getFileDetails(fileId);
+
+    if (!fileDetails) {
+        throw new Error("File doesn't exist");
+    }
+    if (fileDetails.toJSON().uploadedBy !== tutorId) {
+        throw new Error("Only the tutor who uploaded the file can delete it");
+    }
+
+    deleteFileFromStorage(fileDetails.fileLocation);
+    await FileModel.deleteFile(fileId);
 }
