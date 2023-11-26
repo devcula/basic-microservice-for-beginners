@@ -1,13 +1,13 @@
 import { ValidationError } from "../errors/validation.error";
 import { FILE_TYPES } from "../enums/files.enum";
 import { KeyValue } from "../interfaces/common.interface";
-import { UploadedFile } from "../interfaces/files.interface";
+import { FileDetails, UploadedFile } from "../interfaces/files.interface";
 import * as FileModel from "../models/file.model";
-import { File } from "../models/mysql";
+import * as ClassroomModel from "../models/classroom.model";
 
 export const saveUploadedFileToDB = async (tutorId: number, classroomId: number, body: KeyValue, uploadedFile?: UploadedFile) => {
     const fileType: FILE_TYPES = body.fileType;
-    let createdFile: File;
+    let fileDetailsToSave: FileDetails;
 
     if (fileType === FILE_TYPES.URL) {
         const fileUrl: string = body.fileUrl;
@@ -17,22 +17,31 @@ export const saveUploadedFileToDB = async (tutorId: number, classroomId: number,
         if (uploadedFile) {
             throw new ValidationError("Cannot attach a file when fileType is URL");
         }
-        createdFile = await FileModel.saveFileDetailsToDB(tutorId, classroomId, {
+        fileDetailsToSave = {
             description: body.description,
             fileType,
             fileLocation: fileUrl,
             filename: fileUrl
-        });
+        };
     }
     else {
         // A file is uploaded
-        createdFile = await FileModel.saveFileDetailsToDB(tutorId, classroomId, {
+        fileDetailsToSave = {
             description: body.description,
             fileType,
             fileLocation: uploadedFile.path,
             filename: uploadedFile.originalname
-        });
+        };
     }
 
+    const classroomDetails = await ClassroomModel.getClassroomDetails(classroomId);
+    if (!classroomDetails) {
+        throw new Error("Classroom not found");
+    }
+    if (classroomDetails.toJSON().tutorId !== tutorId) {
+        throw new Error("This account doesn't have access to add students to this classroom");
+    }
+
+    const createdFile = await FileModel.saveFileDetailsToDB(tutorId, classroomId, fileDetailsToSave);
     return createdFile?.toJSON();
 }
