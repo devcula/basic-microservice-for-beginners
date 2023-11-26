@@ -1,0 +1,344 @@
+{
+	"info": {
+		"_postman_id": "c46d13fd-9826-4a5e-a4d0-b960e12212e2",
+		"name": "Test-Microservice",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "13427874"
+	},
+	"item": [
+		{
+			"name": "Login/Register auth",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"tutor2\",\r\n    \"password\": \"awsass\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/auth/login",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Classroom",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InR1dG9yMiIsInVzZXJSb2xlIjoidHV0b3IiLCJ1c2VySWQiOjEsImlhdCI6MTcwMDk3ODQ5NywiZXhwIjoxNzAwOTgyMDk3fQ.RPRJx-hbCo9wC1HfWeHDYaG8H0s_cxmHn035X-8U98g",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"className\": \"class 2\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/classroom/create",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"classroom",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add students",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InR1dG9yMiIsInVzZXJSb2xlIjoidHV0b3IiLCJ1c2VySWQiOjEsImlhdCI6MTcwMTAxODcxNiwiZXhwIjoxNzAxMDIyMzE2fQ.Hr6TYoMcOChpii8AxIedWCIDa4dS2-gizg-V8Q4NZMY",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"classroomId\": 1,\r\n    \"students\": [\"devcula\"]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/classroom/addStudents",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"classroom",
+						"addStudents"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete student",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InR1dG9yMiIsInVzZXJSb2xlIjoidHV0b3IiLCJ1c2VySWQiOjEsImlhdCI6MTcwMDk4NTc1OSwiZXhwIjoxNzAwOTg5MzU5fQ.-gZwyyUf1Czzvz0j6afqlgft4Onwjn40kzfj1Hurux4"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"classroomId\": 1,\r\n    \"student\": [\"devcula\"]\r\n}"
+				},
+				"url": {
+					"raw": "{{host}}/classroom/removeStudent",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"classroom",
+						"removeStudent"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Upload file to classroom",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InR1dG9yMiIsInVzZXJSb2xlIjoidHV0b3IiLCJ1c2VySWQiOjEsImlhdCI6MTcwMTAyMjc2NSwiZXhwIjoxNzAxMDI2MzY1fQ.a7bD1wDLvzbbLaERP8hWjdI4zai_bokxXCd9QCWNp4o",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/C:/Users/abhis/Downloads/laptop.jpg"
+						},
+						{
+							"key": "fileType",
+							"value": "VIDEO",
+							"type": "text"
+						},
+						{
+							"key": "description",
+							"value": "LAPTOP video",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}/file/upload?classroomId=1",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"file",
+						"upload"
+					],
+					"query": [
+						{
+							"key": "classroomId",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Rename file",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InR1dG9yMiIsInVzZXJSb2xlIjoidHV0b3IiLCJ1c2VySWQiOjEsImlhdCI6MTcwMTAxNTc5OSwiZXhwIjoxNzAxMDE5Mzk5fQ.D1ihkVRdqQZ6jysWxFJHpXWRWgQJZo6HvAfEUhHcYtY",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"fileId\": 1,\r\n    \"filename\": \"earth-new-2.jpg\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/file/rename",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"file",
+						"rename"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete file",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InR1dG9yMiIsInVzZXJSb2xlIjoidHV0b3IiLCJ1c2VySWQiOjEsImlhdCI6MTcwMTAyMjc2NSwiZXhwIjoxNzAxMDI2MzY1fQ.a7bD1wDLvzbbLaERP8hWjdI4zai_bokxXCd9QCWNp4o",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"fileId\": 6\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/file/delete",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"file",
+						"delete"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Classroom Feed",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRldmN1bGEiLCJ1c2VyUm9sZSI6InN0dWRlbnQiLCJ1c2VySWQiOjMsImlhdCI6MTcwMTAxODc5OSwiZXhwIjoxNzAxMDIyMzk5fQ.tDs_uaYHyLeeTXb8VLjaPEnBohG834St-qFGM4FUiCI",
+						"type": "text",
+						"description": "Based on this login type and auth token, it will return classroom feed for either the student or the tutor"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/classroom/feed",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"classroom",
+						"feed"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get File Feed",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InR1dG9yMiIsInVzZXJSb2xlIjoidHV0b3IiLCJ1c2VySWQiOjEsImlhdCI6MTcwMTAyMjc2NSwiZXhwIjoxNzAxMDI2MzY1fQ.a7bD1wDLvzbbLaERP8hWjdI4zai_bokxXCd9QCWNp4o",
+						"type": "text",
+						"description": "Based on this login type and auth token, it will return files feed for either the student or the tutor"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/file/feed?classroomId=1&searchTerm=a&fileType=",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"file",
+						"feed"
+					],
+					"query": [
+						{
+							"key": "classroomId",
+							"value": "1",
+							"description": "Mandatory parameter - Classroom id to fetch the files feed for"
+						},
+						{
+							"key": "searchTerm",
+							"value": "a",
+							"description": "File name to search for"
+						},
+						{
+							"key": "fileType",
+							"value": "",
+							"description": "File type to search for"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "host",
+			"value": "http://localhost:3000",
+			"type": "string"
+		}
+	]
+}

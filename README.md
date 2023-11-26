@@ -20,6 +20,7 @@
 ## NOTES:
     - You don't need to run the SQL scripts to create tables. Sequelize will automatically take care of that when the server is start. The defined models are synced with the database.
     - You also don't need to add default roles i.e. tutor/student. I have added some server startup code to automatically insert the roles defined in the enum.
+    - SQL scripts, ER diagram and Postman Collection are present in project_metadata folder
     - Use "npm run dev" to run the server if you want to try it in development mode.
 
 # Cheers!
