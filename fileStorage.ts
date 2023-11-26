@@ -16,24 +16,22 @@
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
+import config from './config';
 
 // Check if the upload directory exists
 // If not, create one
 // NOTE: A new directory uploads/ will be created where all the uploaded files will be written
-const currentPath = __dirname;
-const uploadDirName = 'uploads';
+const fileStoragePath = config.FILES_STORAGE_LOCATION;
 
-const uploadsDir = path.join(currentPath, uploadDirName);
-
-if (!fs.existsSync(uploadsDir)) {
+if (!fs.existsSync(fileStoragePath)) {
     // If not, create the directory
-    fs.mkdirSync(uploadsDir);
+    fs.mkdirSync(fileStoragePath);
 }
 
 export const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         // Function to get the destination folder
-        cb(null, `${uploadDirName}/`);
+        cb(null, `${fileStoragePath}/`);
     },
     filename: function (req, file, cb) {
         // This function will be called to get the filename for the file. Return unique file names from here.
@@ -41,10 +39,9 @@ export const storage = multer.diskStorage({
     }
 });
 
-export const deleteFile = (relativePath: string) => {
-    // Delete files from filestorage with relative path from this file
+export const deleteFile = (filePath: string) => {
     try {
-        fs.unlinkSync(path.join(currentPath, relativePath))
+        fs.unlinkSync(filePath);
     }
     catch (err) { }
 }

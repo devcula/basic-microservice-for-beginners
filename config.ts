@@ -5,7 +5,8 @@ const config = {
         USER: process.env.MYSQL_USER || "root",
         PASSWORD: process.env.MYSQL_PASSWORD || "root",
         DATABASE: "TEST_DEV_DB"
-    }
+    },
+    FILES_STORAGE_LOCATION: '/home/devcula/Workspace/fileUploads'
 };
 
 export default config;
