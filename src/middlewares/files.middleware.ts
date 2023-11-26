@@ -31,4 +31,4 @@ const fileUpload = multer({
     fileFilter
 });
 
-export const handleFileUploads = fileUpload.array('files', 5);  // Upload files passed in "files" key in body. Max 5 files.
+export const handleFileUpload = fileUpload.single('file');  // Uploaded file passed in "file" key in body.

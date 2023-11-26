@@ -12,13 +12,22 @@
   }
  */
 
+import { FILE_TYPES } from "../enums/files.enum";
+
 export interface UploadedFile {
-    fieldname: string,
-    originalname: string,
-    encoding: string,
-    mimetype: string,
-    destination: string,
-    filename: string,
-    path: string,
-    size: number
+  fieldname: string,
+  originalname: string,
+  encoding: string,
+  mimetype: string,
+  destination: string,
+  filename: string,
+  path: string,
+  size: number
+}
+
+export interface FileDetails {
+  description: string;
+  fileType: FILE_TYPES;
+  fileLocation: string;
+  filename: string;
 }

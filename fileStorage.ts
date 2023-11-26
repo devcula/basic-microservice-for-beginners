@@ -9,6 +9,10 @@
  * So, we will have our very own file storage system. Win-Win!
  */
 
+/**
+ * IMPORTANT: Have all the file storage utility functions defined in this file only to keep the relative path of the files same.
+ */
+
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
@@ -16,9 +20,11 @@ import fs from 'fs';
 // Check if the upload directory exists
 // If not, create one
 // NOTE: A new directory uploads/ will be created where all the uploaded files will be written
+const currentPath = __dirname;
 const uploadDirName = 'uploads';
 
-const uploadsDir = path.join(__dirname, uploadDirName);
+const uploadsDir = path.join(currentPath, uploadDirName);
+
 if (!fs.existsSync(uploadsDir)) {
     // If not, create the directory
     fs.mkdirSync(uploadsDir);
@@ -31,6 +37,14 @@ export const storage = multer.diskStorage({
     },
     filename: function (req, file, cb) {
         // This function will be called to get the filename for the file. Return unique file names from here.
-        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+        cb(null, 'file-' + Date.now() + path.extname(file.originalname));
     }
 });
+
+export const deleteFile = (relativePath: string) => {
+    // Delete files from filestorage with relative path from this file
+    try {
+        fs.unlinkSync(path.join(currentPath, relativePath))
+    }
+    catch (err) { }
+}
