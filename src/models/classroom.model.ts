@@ -42,3 +42,20 @@ export const removeStudent = async (classroomId: number, student: User) => {
         }
     });
 }
+
+export const getClassroomsByTutor = async (tutorId: number) => {
+    const classrooms = await Classroom.findAll({ where: { tutorId } });
+    return classrooms;
+}
+
+export const getClassroomsByStudent = async (studentId: number) => {
+    const classrooms = await ClassroomStudent.findAll({
+        where: { studentId },
+        include: {
+            model: Classroom,
+            attributes: ['id', 'className']
+        }
+    });
+
+    return classrooms;
+}

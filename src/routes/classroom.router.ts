@@ -78,4 +78,16 @@ router.delete("/removeStudent", authorizeTutor, async (req: CustomRequest, res: 
     }
 });
 
+router.get("/feed", async (req: CustomRequest, res: Response) => {
+    const userDetails = req.userDetails;
+    try {
+        const classesFeed = await ClassroomService.getFeed(userDetails.userRole, userDetails.userId);
+        res.status(200).json({ feed: classesFeed });
+    }
+    catch (err) {
+        console.log("Error while fetching classroom feed", err);
+        res.status(500).json({ error: err?.message });
+    }
+});
+
 export default router;

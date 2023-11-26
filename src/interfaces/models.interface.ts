@@ -49,4 +49,6 @@ export interface FileCreationAttributes extends Optional<FileAttributes, 'id'> {
 export interface ClassroomStudentAttributes {
     studentId: number;
     classroomId: number;
+    // Not required fields added below to be used in case of JOIN queries
+    Classroom?: Partial<ClassroomAttributes>;
 }

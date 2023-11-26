@@ -180,6 +180,8 @@ ClassroomStudent.init({
 // Define associations in Classroom and User models
 Classroom.belongsToMany(User, { through: 'ClassroomStudent', foreignKey: 'classroomId' });
 User.belongsToMany(Classroom, { through: 'ClassroomStudent', foreignKey: 'studentId' });
+ClassroomStudent.belongsTo(Classroom, { foreignKey: 'classroomId' });
+ClassroomStudent.belongsTo(User, { foreignKey: 'studentId' });
 
 export const initDatabase = async () => {
     // Verify connection with the database

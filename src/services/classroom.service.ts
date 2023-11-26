@@ -1,3 +1,6 @@
+import _ from 'lodash';
+import { ROLES } from '../enums/users.enum';
+import { ClassroomFeed } from '../interfaces/classroom.interface';
 import * as ClassroomModel from '../models/classroom.model';
 import * as UserModel from '../models/user.model';
 
@@ -39,4 +42,31 @@ export const removeStudent = async (tutorId: number, classroomId: number, studen
     }
 
     await ClassroomModel.removeStudent(classroomId, studentData);
+}
+
+export const getFeed = async (role: ROLES, userId: number) => {
+    let classroomFeed: ClassroomFeed[] = [];
+    if (role === ROLES.STUDENT) {
+        const classroomsByStudent = await ClassroomModel.getClassroomsByStudent(userId);
+        _.forEach(classroomsByStudent, classroom => {
+            const classroomDetails = classroom.toJSON();
+            classroomFeed.push({
+                className: classroomDetails.Classroom.className,
+                classroomId: classroomDetails.Classroom.id
+            });
+        });
+    }
+    else {
+        //Tutor feed
+        const classroomsByTutor = await ClassroomModel.getClassroomsByTutor(userId);
+        _.forEach(classroomsByTutor, classroom => {
+            const classroomDetails = classroom.toJSON();
+            classroomFeed.push({
+                className: classroomDetails.className,
+                classroomId: classroomDetails.id
+            });
+        });
+    }
+
+    return classroomFeed;
 }
