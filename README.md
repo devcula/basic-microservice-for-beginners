@@ -17,6 +17,11 @@
     5. If still not able to start, you can try replacing "tsc" with "npx tsc" in build script in package.json.
     6. If still not working, well reach out to me with the error.
 
+## IMPORTANT
+    -> To register as a tutor, please prefix the username with the keyword "tutor" like "tutor1" or "tutor-test".
+    -> Any other username which DOESN'T START WITH "tutor" will be registered/authorized as a student.
+
+
 ## NOTES:
     - You don't need to run the SQL scripts to create tables. Sequelize will automatically take care of that when the server is start. The defined models are synced with the database.
     - You also don't need to add default roles i.e. tutor/student. I have added some server startup code to automatically insert the roles defined in the enum.
