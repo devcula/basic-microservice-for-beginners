@@ -1,4 +1,4 @@
-# simple-microservice
+# A basic Microservice reference for beginners
 
 ### A basic stateless microservice implemented using below libraries/frameworks
     - Node.js
